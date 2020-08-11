@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Create SCSS BEM tree by html files parsing",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
