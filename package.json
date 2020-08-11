@@ -10,9 +10,6 @@
     "type": "git",
     "url": "git+https://github.com/shurinskiy/bemtree-from-html"
   },
-  "bin": {
-    "bemtree-from-html": "./index.js"
-  }, 
   "keywords": [],
   "author": "Alexandr Tumanov <shurinskiy@gmail.com>",
   "license": "ISC",
