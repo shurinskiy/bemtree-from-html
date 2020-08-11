@@ -6,8 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shurinskiy/bemtree-from-html"
+  },
+  "bin": {
+    "bemtree-from-html": "./index.js"
+  }, 
   "keywords": [],
-  "author": "shurinskiy@mail.ru",
+  "author": "Alexandr Tumanov <shurinskiy@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "glob": "^7.1.6",
