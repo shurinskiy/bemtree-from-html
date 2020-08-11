@@ -13,7 +13,8 @@
   "keywords": [],
   "author": "Alexandr Tumanov <shurinskiy@gmail.com>",
   "license": "ISC",
-  "devDependencies": {
+  "devDependencies": {},
+  "dependencies": {
     "glob": "^7.1.6",
     "mkdirp2": "^1.0.4"
   }
