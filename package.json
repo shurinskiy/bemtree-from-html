@@ -1,0 +1,16 @@
+{
+  "name": "bemtree-from-html",
+  "version": "1.0.0",
+  "description": "Create SCSS BEM tree by html files parsing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "shurinskiy@mail.ru",
+  "license": "ISC",
+  "devDependencies": {
+    "glob": "^7.1.6",
+    "mkdirp2": "^1.0.4"
+  }
+}
