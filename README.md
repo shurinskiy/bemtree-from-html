@@ -1,9 +1,8 @@
 # bemtree-from-html [![npm version](https://badge.fury.io/js/bemtree-from-html.svg)](http://badge.fury.io/js/bemtree-from-html)
-# Install
 
 >This module is able to find html files for a given search template, inside your project. Analyze them and build on their basis a file BEM structure for SCSS.
 >
-
+# Install
 ```
 npm install bemtree-from-html --save-dev
 ```
