@@ -40,9 +40,13 @@ const toJSON = (classes) => {
 	// наполняю bemjson
 	classes.forEach((item) => {
 		// если нет _ - блок
-		if ((item.indexOf('_') == -1)) {
+		if ((item.indexOf('_') == -1) && item.indexOf('-js') == -1) {
 			blockname = item;
 			bemjson[blockname] = {'mods':'','elems':{}};
+		}
+		// если есть блок-js - создать js файл с именем блока
+		if ((item.indexOf(blockname + '-js') > -1)) {
+			bemjson[blockname]['js'] = true;
 		}
 		// если только один _ - модификатор блока
 		if ((item.match(/_/g) || []).length == 1) {
@@ -99,7 +103,7 @@ const createStucture = (bemjson, options) => {
 		}
 
 		if (block.js) {
-			createFiles(`${dirPath}${blockName}.js`, `// (() => {\n// код\n// })();\n`);
+			createFiles(`${dirPath}${blockName}.js`, `// (() => {\n// code..\n// })();\n`);
 		}
 		fileContent += `}\n`;
 
