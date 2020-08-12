@@ -78,7 +78,7 @@ const createStucture = (bemjson, options) => {
 		let fileContent = `.${blockName} {\n\t$self: &;\n\n`;
 
 		const made = mkdirp.sync(dirPath);
-		console.log(`Создание папки: ${made}`);
+		console.log(`Directory created: ${dirPath}`);
 
 		if (block.mods) {
 			let modifiers = block.mods.replace(/,\s*$/, '').split(',');
@@ -116,9 +116,9 @@ const createFiles = (filePath, fileContent) => {
 	if (fileExist(filePath) === false) {
 		fs.writeFile(filePath, fileContent, (err) => {
 			if (err) {
-				return console.log(`Файл НЕ создан: ${err}`);
+				return console.log(`File NOT created: ${err}`);
 			}
-			console.log('Файл создан: ' + filePath);
+			console.log('File created: ' + filePath);
 		});
 	}
 }
