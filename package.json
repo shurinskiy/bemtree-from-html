@@ -1,6 +1,6 @@
 {
   "name": "bemtree-from-html",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Create SCSS BEM tree by html files parsing",
   "main": "index.js",
   "bin": "index.js",
@@ -11,9 +11,13 @@
     "type": "git",
     "url": "git+https://github.com/shurinskiy/bemtree-from-html"
   },
-  "keywords": [],
-  "author": "_tango <shurinskiy@gmail.com>",
+  "keywords": ["bem","html","scss"],
+  "author": "Alexandr Tumanov <shurinskiy2@gmail.com>",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shurinskiy/bemtree-from-html/issues"
+  },
+  "homepage": "https://github.com/shurinskiy/bemtree-from-html/blob/master/README.md",
   "devDependencies": {},
   "dependencies": {
     "glob": "^7.1.6",
