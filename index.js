@@ -6,7 +6,7 @@ const glob = require( 'glob' );
 const mkdirp = require('mkdirp2');
 let options = {
 	cwd: process.cwd(),
-	from:'./src/**/!(_)*.html',
+	from:'./src/**/*.html',
 	to: 'src/blocks'
 };
 

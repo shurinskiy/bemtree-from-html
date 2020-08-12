@@ -14,7 +14,7 @@ Call from file:
 let bemtree = require("bemtree-from-html");
 
 bemtree({
-	from:'./src/**/*.html',
+	from:'./src/**/!(_|temp)*.html',
 	to: 'src/blocks'
 });
 ```
@@ -22,7 +22,7 @@ Call from package.json:
 
 ```json
 "scripts": {
-	"bemtree": "bemtree-from-html from=./src/**/!(_%classes)*.html to=src/blocks" 
+	"bemtree": "bemtree-from-html from=./src/**/!(_%temp)*.html to=src/blocks" 
 },
 
 > npm run bemtree
@@ -120,7 +120,7 @@ blockname2.js:
 #### from
 Type: string
 
-Where to find html files is determined by the search template for minimatch. Default value: `./src/**/!(_)*.html` See [examples](https://github.com/motemen/minimatch-cheat-sheet/blob/master/README.md).
+Where to find html files is determined by the search template for minimatch. Default value: `./src/**/*.html` See [examples](https://github.com/motemen/minimatch-cheat-sheet/blob/master/README.md).
 #### to
 Type: string
 
