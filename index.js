@@ -7,14 +7,15 @@ const mkdirp = require('mkdirp2');
 let options = {
 	cwd: process.cwd(),
 	from:'./src/**/*.html',
-	to: 'src/blocks'
+	to: 'src/blocks',
+	omit: ''
 };
 
 
 /* Создать массив из всех классов которые есть в файлах найденных по заданному шаблону поиска */
 const getClasses = (options) => {
 	let classes = [];
-	glob.sync(options.from, {cwd:options.cwd}).forEach((file) => {
+	glob.sync(options.from.replace('%', '|'), {cwd:options.cwd}).forEach((file) => {
 		let html = fs.readFileSync(path.join(options.cwd, file), 'utf-8');
 		let classMatches = html.match(/class=("([^"]*)")|class=('([^']*)')/ig)  || [];
 		
@@ -31,14 +32,21 @@ const getClasses = (options) => {
 
 
 /* Преобразовать массив классов в объект с вложенностью соответствующей БЭМ иерархии */
-const toJSON = (classes) => {
+const toJSON = (classes, options) => {
 	let bemjson = {};
 	let blockname = '';
 	let elemname = '';
 	let elem = '';
+	let omit = new RegExp(`^(${options.omit.replace(/\s*/g, '').replace(/,/g, '|')}).*?`);
+
+	console.log(omit);
 	
 	// наполняю bemjson
 	classes.forEach((item) => {
+		// если в списке исключений - пропускаю
+		if(item.match(omit)) {
+			return;
+		}
 		// если нет _ - блок
 		if ((item.indexOf('_') == -1) && item.indexOf('-js') == -1) {
 			blockname = item;
@@ -78,7 +86,7 @@ const createStucture = (bemjson, options) => {
 		let fileContent = `.${blockName} {\n\t$self: &;\n\n`;
 
 		const made = mkdirp.sync(dirPath);
-		console.log(`Directory created: ${dirPath}`);
+		console.log(`Directory created: ${made}`);
 
 		if (block.mods) {
 			let modifiers = block.mods.replace(/,\s*$/, '').split(',');
@@ -137,11 +145,11 @@ const fileExist = (filePath) => {
 if (require.main === module) {
 	for (let option of process.argv.slice(2)) {
 		let [key, value] = option.split('=');
-		options[key] = value.replace('%', '|');
+		options[key] = value;
 	}
 
 	const classes = getClasses(options);
-	const bemjson = toJSON(classes);
+	const bemjson = toJSON(classes, options);
 	createStucture(bemjson, options);
 
 } else {
@@ -149,7 +157,7 @@ if (require.main === module) {
 		options = {...options, ...opt };
 		
 		const classes = getClasses(options);
-		const bemjson = toJSON(classes);
+		const bemjson = toJSON(classes, options);
 		createStucture(bemjson, options);
 	}
 }

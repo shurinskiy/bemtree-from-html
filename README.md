@@ -15,19 +15,21 @@ let bemtree = require("bemtree-from-html");
 
 bemtree({
 	from:'./src/**/!(_|temp)*.html',
-	to: 'src/blocks'
+	to: 'src/blocks',
+	omit: '@@,js-,active,col,row'
 });
 ```
 Call from package.json:
 
 ```json
 "scripts": {
-	"bemtree": "bemtree-from-html from=./src/**/!(_%temp)*.html to=src/blocks" 
+	"bemtree": "bemtree-from-html from=./src/**/!(_%temp)*.html to=src/blocks omit=active,col,row" 
 },
 
 > npm run bemtree
 
 ```
+>
 > **`Note!`** Since the node.js console accepts the "|" as the beginning of a new command, in the `"scripts:{}"` section of the `package.json` file, when describing the search template, you must use the "%" symbol instead "|". When called inside the corresponding function, "%" will automatically be replaced with "|"
 >
 source html:
@@ -125,11 +127,14 @@ Where to find html files is determined by the search template for minimatch. Def
 Type: string
 
 Where to create the resulting BEM structure. Default value: `src/blocks`
+#### omit
+Type: string
+
+A comma-separated list of class name exceptions. If the class name begins with one of the values from this list, it will be ignored.
 #### cwd
 Type: string
 
 Current working directory. Default value: `process.cwd()`
-
 
 
 
