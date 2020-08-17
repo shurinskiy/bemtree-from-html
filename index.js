@@ -8,7 +8,7 @@ let options = {
 	cwd: process.cwd(),
 	from:'./src/**/*.html',
 	to: 'src/blocks',
-	omit: ''
+	omit: false
 };
 
 
@@ -17,10 +17,10 @@ const getClasses = (options) => {
 	let classes = [];
 	glob.sync(options.from.replace('%', '|'), {cwd:options.cwd}).forEach((file) => {
 		let html = fs.readFileSync(path.join(options.cwd, file), 'utf-8');
-		let classMatches = html.match(/class=("([^"]*)")|class=('([^']*)')/ig)  || [];
+		let classMatches = html.match(/class=("([^"]*)")|class=('([^']*)')/ig) || [];
 		
 		classMatches.forEach((classString) => {
-			let classesFromString = classString.replace(/class=/i, '').replace(/'|"/g, '').match(/\S+/g);
+			let classesFromString = classString.replace(/class=/i, '').replace(/'|"/g, '').match(/\S+/g) || [];
 			classes = [...classes, ...classesFromString];
 		})
 		
@@ -37,13 +37,11 @@ const toJSON = (classes, options) => {
 	let blockname = '';
 	let elemname = '';
 	let elem = '';
-	let omit = new RegExp(`^(${options.omit.replace(/\s*/g, '').replace(/,/g, '|')}).*?`);
+	let omit = options.omit ? new RegExp(`^(${options.omit.replace(/\s*/g, '').replace(/,/g, '|')}).*?`) : false;
 
-	console.log(omit);
-	
 	// наполняю bemjson
 	classes.forEach((item) => {
-		// если в списке исключений - пропускаю
+		// если имя класса есть в списке исключений - пропускаю
 		if(item.match(omit)) {
 			return;
 		}
