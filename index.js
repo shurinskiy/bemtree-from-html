@@ -4,12 +4,18 @@ const fs = require('fs');
 const path = require('path');
 const glob = require( 'glob' );
 const mkdirp = require('mkdirp2');
+const pckg = require(path.join(process.cwd(), 'package.json'));
+
 let options = {
 	cwd: process.cwd(),
 	from:'./src/**/*.html',
 	to: 'src/blocks',
 	omit: false
 };
+
+if(pckg.bemtree) {
+	options = {...options, ...pckg.bemtree }
+}
 
 
 /* Создать массив из всех классов которые есть в файлах найденных по заданному шаблону поиска */

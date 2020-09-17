@@ -14,11 +14,13 @@ Call from file:
 let bemtree = require("bemtree-from-html");
 
 bemtree({
-	from:'./src/**/!(_|temp)*.html',
-	to: 'src/blocks',
-	omit: '@@,js-,active,col,row'
+	from:	'./src/**/!(_|temp)*.html',
+	to: 	'src/blocks',
+	omit: 	'@@,js-,active,col,row'
 });
 ```
+<br>
+
 Call from package.json:
 
 ```json
@@ -32,6 +34,28 @@ Call from package.json:
 >
 > **`Note!`** Since the node.js console accepts the "|" as the beginning of a new command, in the `"scripts:{}"` section of the `package.json` file, when describing the search template, you must use the "%" symbol instead "|". When called inside the corresponding function, "%" will automatically be replaced with "|"
 >
+
+<br>
+
+Call from package.json, use settings object:
+
+```json
+"scripts": {
+	"bemtree": "bemtree-from-html" 
+},
+"bemtree": {
+	"from":	"./src/**/!(_|temp)*.html",
+	"to": 	"src/blocks",
+	"omit":	"@@,js-,active,col,row"
+}
+
+> npm run bemtree
+
+```
+>
+
+<br>
+
 source html:
 ```html
 <div class="blockname1 blockname1_top">
@@ -44,7 +68,7 @@ source html:
 	<div class="blockname1__item"></div>
 	<div class="blockname1__item blockname1__item_last"></div>
 </div>
-<div class="blockname2 blockname2_first blockname1-js">
+<div class="blockname2 blockname2_first blockname2-js">
 	<div class="blockname2__item blockname2__item_first"></div>
 	<div class="blockname2__item"></div>
 	<div class="blockname2__item blockname2__item_last"></div>
@@ -89,7 +113,7 @@ blockname1.scss:
 ```
 blockname2.scss:
 ```scss
-.blockname1 {
+.blockname2 {
 	$self: &;
 
 	&_first {
@@ -114,7 +138,6 @@ blockname2.js:
 // code..
 // })();
 ```
-
 
 
 # Options
