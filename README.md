@@ -14,9 +14,9 @@ Call from file:
 let bemtree = require("bemtree-from-html");
 
 bemtree({
-	from:	'./src/**/!(_|temp)*.html',
-	to: 	'src/blocks',
-	omit: 	'@@,js-,active,col,row'
+	from:'./src/**/!(_|temp)*.html',
+	to:'src/blocks',
+	omit:'@@,js-,active,col,row'
 });
 ```
 <br>
@@ -34,7 +34,6 @@ Call from package.json:
 >
 > **`Note!`** Since the node.js console accepts the "|" as the beginning of a new command, in the `"scripts:{}"` section of the `package.json` file, when describing the search template, you must use the "%" symbol instead "|". When called inside the corresponding function, "%" will automatically be replaced with "|"
 >
-
 <br>
 
 Call from package.json, use settings object:
@@ -44,18 +43,14 @@ Call from package.json, use settings object:
 	"bemtree": "bemtree-from-html" 
 },
 "bemtree": {
-	"from":	"./src/**/!(_|temp)*.html",
-	"to": 	"src/blocks",
-	"omit":	"@@,js-,active,col,row"
+	"from":"./src/**/!(_|temp)*.html",
+	"to":"src/blocks",
+	"omit":"@@,js-,active,col,row"
 }
 
 > npm run bemtree
 
 ```
->
-
-<br>
-
 source html:
 ```html
 <div class="blockname1 blockname1_top">
@@ -159,9 +154,11 @@ Type: string
 
 Current working directory. Default value: `process.cwd()`
 
+<br>
 
-
-
+> **`Note!`** It is very convenient to use it together with the [gulp-sass-glob](https://github.com/mikevercoelen/gulp-sass-glob) utility. This utility allows you to automatically include all scss files from the blocks folder into any target scss file. Like this: <br>
+@import "../blocks/**/*.scss";
+>
 
 
 

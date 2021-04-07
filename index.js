@@ -31,8 +31,13 @@ const getClasses = (options) => {
 		})
 		
 	});
-	// удаляю из массива повторяющиеся имена классов, а уникальные сортирую по алфавиту
-	classes = Array.from(new Set(classes)).sort();
+	// удаляю из массива повторяющиеся имена классов, а уникальные сортирую по блокам
+	classes = Array.from(new Set(classes)).sort((a, b) => {
+		a = a.split('_')[0];
+		b = b.split('_')[0];
+		return (a < b) ? -1 : (a > b) ? 1 : 0;
+	});
+
 	return classes;
 }
 
@@ -41,8 +46,6 @@ const getClasses = (options) => {
 const toJSON = (classes, options) => {
 	let bemjson = {};
 	let blockname = '';
-	let elemname = '';
-	let elem = '';
 	let omit = options.omit ? new RegExp(`^(${options.omit.replace(/\s*/g, '').replace(/,/g, '|')}).*?`) : false;
 
 	// наполняю bemjson
@@ -65,18 +68,19 @@ const toJSON = (classes, options) => {
 			item = item.replace(blockname+'_', '');
 			bemjson[blockname]['mods'] += (item + ',');
 		}
-		// если есть блок__ но всего _ меньше трех - элемент
-		if ((item.indexOf(blockname+'__') > -1) && ((item.match(/_/g) || []).length < 3)) {
-			elemname = item;
-			elem = item.replace(blockname+'__', '');
-			bemjson[blockname]['elems'][elem] = {'mods':''};
-		}
-		// если есть элемент_ и элемент принадлежит текущему блоку - модификатор элемента
-		if ((elemname.indexOf(blockname) > -1) && (item.indexOf(elemname+'_') > -1)) {
-			item = item.replace(elemname+'_', '');
-			bemjson[blockname]['elems'][elem]['mods'] += (item + ',');
+		// если есть blockname__ - элемент или его модификатор
+		if ((item.indexOf(blockname+'__') > -1)) {
+			let rest = item.replace(blockname+'__', '').split('_');
+			let elem = bemjson[blockname]['elems'][rest[0]];
+
+			if (! elem)
+				bemjson[blockname]['elems'][rest[0]] = {'mods':''};
+
+			if(rest[1])
+				elem['mods'] += (rest[1] + ',');
 		}
 	});
+	// console.dir(JSON.stringify(bemjson));
 	return bemjson;
 }
 
