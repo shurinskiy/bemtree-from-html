@@ -3,39 +3,54 @@
 const fs = require('fs');
 const path = require('path');
 const glob = require( 'glob' );
-const mkdirp = require('mkdirp2');
 const pckg = require(path.join(process.cwd(), 'package.json'));
 
+let jsImportPath = '';
 let options = {
 	cwd: process.cwd(),
-	from:'./src/**/*.html',
+	from:'src/**/*.html',
 	to: 'src/blocks',
+    js: false,
 	omit: false
 };
 
-if(pckg.bemtree) {
+if (pckg.bemtree) {
 	options = {...options, ...pckg.bemtree }
+}
+
+if (options.js) {
+	jsImportPath = path.posix.relative(path.dirname(options.js), options.to);
 }
 
 
 /* Создать массив из всех классов которые есть в файлах найденных по заданному шаблону поиска */
 const getClasses = (options) => {
 	let classes = [];
+	let html = '';
+
 	glob.sync(options.from.replace('%', '|'), {cwd:options.cwd}).forEach((file) => {
-		let html = fs.readFileSync(path.join(options.cwd, file), 'utf-8');
+		try {
+			 html = fs.readFileSync(path.join(options.cwd, file), 'utf-8');
+		} catch (err) {
+			console.error(err)
+		}
+	
 		let classMatches = html.match(/class=("([^"]*)")|class=('([^']*)')/ig) || [];
 		
 		classMatches.forEach((classString) => {
 			let classesFromString = classString.replace(/class=/i, '').replace(/'|"/g, '').match(/\S+/g) || [];
 			classes = [...classes, ...classesFromString];
 		})
-		
 	});
+
 	// удаляю из массива повторяющиеся имена классов, а уникальные сортирую по блокам
 	classes = Array.from(new Set(classes)).sort((a, b) => {
 		a = a.split('_')[0];
 		b = b.split('_')[0];
 		return (a < b) ? -1 : (a > b) ? 1 : 0;
+	}).sort((a, b) => {
+		// чтобы имя блока всегда было первым
+		return ((a.indexOf('_') == -1) && (a == b.split('_')[0])) ? -1 : 0;
 	});
 
 	return classes;
@@ -87,19 +102,25 @@ const toJSON = (classes, options) => {
 
 /* Создать файловую структуру БЭМ для SCSS в заданной директории */
 const createStucture = (bemjson, options) => {
+	let imports = [];
+
 	for (const blockName in bemjson) {
-		const dirPath = `${options.cwd}/${options.to}/${blockName}/`;
-		const filePath = `${dirPath}${blockName}.scss`;
+		const dirPath = path.join(options.cwd, options.to, blockName);
+		const filePath = path.join(dirPath, `${blockName}.scss`);
 		const block = bemjson[blockName];
 		let fileContent = `.${blockName} {\n\t$self: &;\n\n`;
 
-		const made = mkdirp.sync(dirPath);
-		console.log(`Directory created: ${made}`);
+		if (fileExist(filePath) === false) {
+			try {
+				fs.mkdirSync(dirPath, { recursive: true });
+			} catch (err) {
+				console.error(`Directory NOT created: ${err}`)
+			}
+		}
 
 		if (block.mods) {
 			let modifiers = block.mods.replace(/,\s*$/, '').split(',');
 			modifiers.forEach((modifier) => fileContent += `\t&_${modifier.trim()} {\n\t\t\n\t}\n\n`);
-
 		}
 
 		if (Object.keys(block.elems).length !== 0) {
@@ -119,11 +140,25 @@ const createStucture = (bemjson, options) => {
 		}
 
 		if (block.js) {
-			createFiles(`${dirPath}${blockName}.js`, `// (() => {\n// code..\n// })();\n`);
+			createFiles(path.join(dirPath, `${blockName}.js`), `(() => {\n\n\n})();\n`);
+			imports.push(`import "${jsImportPath}/${blockName}/${blockName}.js";`);
+			console.log(`File prepare to import: ${blockName}.js`);
 		}
 		fileContent += `}\n`;
-
+		
 		createFiles(filePath, fileContent);
+	}
+
+	if(options.js)
+		addImportJS(options, imports);
+}
+
+
+const fileExist = (filePath) => {
+	try {
+		fs.statSync(filePath);
+	} catch (err) {
+		return !(err && err.code === 'ENOENT');
 	}
 }
 
@@ -140,13 +175,35 @@ const createFiles = (filePath, fileContent) => {
 }
 
 
-const fileExist = (filePath) => {
-	const fs = require('fs');
-	try {
-		fs.statSync(filePath);
-	} catch (err) {
-		return !(err && err.code === 'ENOENT');
+const addImportJS = (options, imports) => {
+	const lb = require('os').EOL;
+	let content = [];
+
+	if (fileExist(options.js) === true) {
+		try {
+			content = fs.readFileSync(options.js, 'utf-8').toString().split(lb);
+		} catch (err) {
+			console.error(err)
+		}
+	} else {
+		try {
+			fs.mkdirSync(path.dirname(options.js), { recursive: true });
+		} catch (err) {
+			console.error(`Directory NOT created: ${err}`)
+		}
 	}
+
+	imports.forEach((row) => {
+		if (! content.includes(row))
+			content.push(row);
+	});
+	
+	fs.writeFile(options.js, content.join(lb), 'utf-8', (err) => {
+		if (err) {
+			return console.log(`Imports NOT written: ${err}`);
+		}
+		console.log(`Imports written to: ${path.join(options.cwd, options.js)}`);
+	});
 }
 
 
@@ -169,4 +226,3 @@ if (require.main === module) {
 		createStucture(bemjson, options);
 	}
 }
-
