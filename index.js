@@ -10,7 +10,7 @@ let options = {
 	cwd: process.cwd(),
 	from:'src/**/*.html',
 	to: 'src/blocks',
-    js: false,
+	js: false,
 	omit: false
 };
 
