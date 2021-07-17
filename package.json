@@ -11,7 +11,11 @@
     "type": "git",
     "url": "git+https://github.com/shurinskiy/bemtree-from-html"
   },
-  "keywords": ["bem","html","scss"],
+  "keywords": [
+    "bem",
+    "html",
+    "scss"
+  ],
   "author": "Alexandr Tumanov <shurinskiy2@gmail.com>",
   "license": "ISC",
   "bugs": {
@@ -20,7 +24,6 @@
   "homepage": "https://github.com/shurinskiy/bemtree-from-html/blob/master/README.md",
   "devDependencies": {},
   "dependencies": {
-    "glob": "^7.1.6",
-    "mkdirp2": "^1.0.4"
+    "glob": "^7.1.6"
   }
 }
