@@ -14,13 +14,13 @@ let options = {
 	omit: false
 };
 
-if (pckg.bemtree) {
+if (pckg.bemtree)
 	options = {...options, ...pckg.bemtree }
-}
 
-if (options.js) {
+
+if (options.js)
 	jsImportPath = path.posix.relative(path.dirname(options.js), options.to);
-}
+
 
 
 /* Создать массив из всех классов которые есть в файлах найденных по заданному шаблону поиска */
@@ -66,9 +66,8 @@ const toJSON = (classes, options) => {
 	// наполняю bemjson
 	classes.forEach((item) => {
 		// если имя класса есть в списке исключений - пропускаю
-		if(item.match(omit)) {
-			return;
-		}
+		if(item.match(omit)) return;
+
 		// если нет _ - блок
 		if ((item.indexOf('_') == -1) && item.indexOf('-js') == -1) {
 			blockname = item;
@@ -126,8 +125,8 @@ const createStucture = (bemjson, options) => {
 		if (Object.keys(block.elems).length !== 0) {
 			for (const elem in block.elems) {
 				if (block.elems.hasOwnProperty(elem)) {
-					
 					fileContent += `\t&__${elem} {\n`;
+
 					if (block.elems[elem]['mods']) {
 						let modifiers = block.elems[elem]['mods'].replace(/,\s*$/, '').split(',');
 						modifiers.forEach((modifier) => fileContent += `\n\t\t&_${modifier.trim()} {\n\t\t\t\n\t\t}\n`);
