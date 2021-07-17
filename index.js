@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const glob = require( 'glob' );
+const glob = require('glob');
 const pckg = require(path.join(process.cwd(), 'package.json'));
 
 let jsImportPath = '';
@@ -17,10 +17,8 @@ let options = {
 if (pckg.bemtree)
 	options = {...options, ...pckg.bemtree }
 
-
 if (options.js)
 	jsImportPath = path.posix.relative(path.dirname(options.js), options.to);
-
 
 
 /* Создать массив из всех классов которые есть в файлах найденных по заданному шаблону поиска */
@@ -124,6 +122,7 @@ const createStucture = (bemjson, options) => {
 
 		if (Object.keys(block.elems).length !== 0) {
 			for (const elem in block.elems) {
+
 				if (block.elems.hasOwnProperty(elem)) {
 					fileContent += `\t&__${elem} {\n`;
 
@@ -133,6 +132,7 @@ const createStucture = (bemjson, options) => {
 					} else {
 						fileContent += `\n`;
 					}
+
 					fileContent += `\t}\n\n`;
 				}
 			}

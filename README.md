@@ -14,8 +14,9 @@ Call from file:
 let bemtree = require("bemtree-from-html");
 
 bemtree({
-	from:'./src/**/!(_|temp)*.html',
+	from:'src/**/!(_|temp)*.html',
 	to:'src/blocks',
+	js:'src/js/blocks.js',
 	omit:'@@,js-,active,col,row'
 });
 ```
@@ -25,7 +26,7 @@ Call from package.json:
 
 ```json
 "scripts": {
-	"bemtree": "bemtree-from-html from=./src/**/!(_%temp)*.html to=src/blocks omit=active,col,row" 
+	"bemtree": "bemtree-from-html from=./src/**/!(_%temp)*.html to=src/blocks js=src/js/blocks.js omit=active,col,row" 
 },
 
 > npm run bemtree
@@ -45,6 +46,7 @@ Call from package.json, use settings object:
 "bemtree": {
 	"from":"./src/**/!(_|temp)*.html",
 	"to":"src/blocks",
+	"js":"src/js/blocks.js",
 	"omit":"@@,js-,active,col,row"
 }
 
@@ -129,9 +131,13 @@ blockname2.scss:
 ```
 blockname2.js:
 ```javascript
-// (() => {
-// code..
-// })();
+(() => {
+	//your code..
+})();
+```
+blockname2.js write import to src/js/blocks.js
+```javascript
+import "../blocks/blockname2/blockname2.js";
 ```
 
 
@@ -145,6 +151,10 @@ Where to find html files is determined by the search template for minimatch. Def
 Type: string
 
 Where to create the resulting BEM structure. Default value: `src/blocks`
+#### js
+Type: string
+
+In which file to write .js-file imports for newly created BEM blocks
 #### omit
 Type: string
 
@@ -157,7 +167,8 @@ Current working directory. Default value: `process.cwd()`
 <br>
 
 > **`Note!`** It is very convenient to use it together with the [gulp-sass-glob](https://github.com/mikevercoelen/gulp-sass-glob) utility. This utility allows you to automatically include all scss files from the blocks folder into any target scss file. Like this: <br>
-@import "../blocks/**/*.scss";
+@import "../blocks/**/*.scss"; <br>
+**`Note!`** Now, also, a feature has been added that allows, when creating a block containing a .js file, to automatically write its import to the file specified in the settings. This file contains all the imports, then it is convenient to import it into the main .js file of the project.
 >
 
 
