@@ -80,6 +80,8 @@ src
 	└── blockname2
 		├── blockname2.scss
 		└── blockname2.js
+└── js
+	└── blocks.js
 ```
 BEM structure inside created files:
 
