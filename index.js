@@ -148,7 +148,7 @@ const createStucture = (bemjson, options) => {
 		createFiles(filePath, fileContent);
 	}
 
-	if(options.js)
+	if(options.js && imports.length)
 		addImportJS(options, imports);
 }
 
@@ -178,17 +178,17 @@ const addImportJS = (options, imports) => {
 	const lb = require('os').EOL;
 	let content = [];
 
-	if (fileExist(options.js) === true) {
-		try {
-			content = fs.readFileSync(options.js, 'utf-8').toString().split(lb);
-		} catch (err) {
-			console.error(err)
-		}
-	} else {
+	if (fileExist(options.js) === false) {
 		try {
 			fs.mkdirSync(path.dirname(options.js), { recursive: true });
 		} catch (err) {
 			console.error(`Directory NOT created: ${err}`)
+		}
+	} else {
+		try {
+			content = fs.readFileSync(options.js, 'utf-8').toString().split(lb);
+		} catch (err) {
+			console.error(err)
 		}
 	}
 
@@ -196,7 +196,7 @@ const addImportJS = (options, imports) => {
 		if (! content.includes(row))
 			content.push(row);
 	});
-	
+
 	fs.writeFile(options.js, content.join(lb), 'utf-8', (err) => {
 		if (err) {
 			return console.log(`Imports NOT written: ${err}`);
