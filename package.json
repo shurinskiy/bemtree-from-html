@@ -1,6 +1,6 @@
 {
   "name": "bemtree-from-html",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Create SCSS BEM tree by html files parsing",
   "main": "index.js",
   "bin": "index.js",
@@ -22,8 +22,7 @@
     "url": "https://github.com/shurinskiy/bemtree-from-html/issues"
   },
   "homepage": "https://github.com/shurinskiy/bemtree-from-html/blob/master/README.md",
-  "devDependencies": {},
   "dependencies": {
-    "glob": "^7.1.6"
+    "glob": "^7.2.0"
   }
 }
