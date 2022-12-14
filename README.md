@@ -65,7 +65,7 @@ source html:
 	<div class="blockname1__item"></div>
 	<div class="blockname1__item blockname1__item_last"></div>
 </div>
-<div class="blockname2 blockname2_first" data-blockname2>
+<div class="blockname2 blockname2_first">
 	<div class="blockname2__item blockname2__item_first"></div>
 	<div class="blockname2__item"></div>
 	<div class="blockname2__item blockname2__item_last"></div>
