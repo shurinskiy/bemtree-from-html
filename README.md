@@ -65,7 +65,7 @@ source html:
 	<div class="blockname1__item"></div>
 	<div class="blockname1__item blockname1__item_last"></div>
 </div>
-<div class="blockname2 blockname2_first blockname2-js">
+<div class="blockname2 blockname2_first" data-blockname2>
 	<div class="blockname2__item blockname2__item_first"></div>
 	<div class="blockname2__item"></div>
 	<div class="blockname2__item blockname2__item_last"></div>
@@ -153,14 +153,21 @@ Where to find html files is determined by the search template for minimatch. Def
 Type: string
 
 Where to create the resulting BEM structure. Default value: `src/blocks`
-#### js
-Type: string
-
-In which file to write .js-file imports for newly created BEM blocks
 #### omit
 Type: string
 
 A comma-separated list of class name exceptions. If the class name begins with one of the values from this list, it will be ignored.
+#### use
+Type: string
+
+A comma-separated list of classes name prefix required to use. If it is not empty, then ONLY classes with those names will be used. 
+> **`Note!`** The 'omit' option, in this case, loses its meaning, but continues to be taken into account.<br>
+>
+
+#### js
+Type: string
+
+In which file to write .js-file imports for newly created BEM blocks
 #### cwd
 Type: string
 

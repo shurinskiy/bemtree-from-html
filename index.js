@@ -21,12 +21,9 @@ if (pckg.bemtree)
 /* Создать массив из всех классов которые есть в файлах найденных по заданному шаблону поиска */
 const getClasses = (options) => {
 	let html = '';
-	let entries = {
-		classes: [],
-		attrs: []
-	};
+	let classes = [];
 
-	glob.sync(options.from.replace('%', '|'), {cwd:options.cwd}).forEach((file) => {
+	glob.sync(options.from.replace('%', '|'), {cwd: options.cwd}).forEach((file) => {
 		try {
 			 html = fs.readFileSync(path.join(options.cwd, file), 'utf-8');
 		} catch (err) {
@@ -34,25 +31,15 @@ const getClasses = (options) => {
 		}
 	
 		let classMatches = html.match(/class=("([^"]*)")|class=('([^']*)')/ig) || []; // классы
-		let attrMatches = html.match(/\bdata-(-|\w)+/ig) || []; // data- атрибуты
 		
 		classMatches.forEach((classString) => {
 			let classesFromString = classString.replace(/class=/i, '').replace(/'|"/g, '').match(/\S+/g) || [];
-			entries.classes = [...entries.classes, ...classesFromString];
+			classes = [...classes, ...classesFromString];
 		});
-
-		attrMatches.forEach((attrString) => {
-			let attrsFromString = attrString.replace(/data-/i, '').match(/\S+/g) || [];
-			entries.attrs = [...entries.attrs, ...attrsFromString];
-		});
-
 	});
-
-	// удаляю из массива повторяющиеся имена data- атрибутов
-	entries.attrs = Array.from(new Set(entries.attrs));
 	
 	// удаляю из массива повторяющиеся имена классов, а уникальные сортирую по блокам
-	entries.classes = Array.from(new Set(entries.classes)).sort((a, b) => {
+	classes = Array.from(new Set(classes)).sort((a, b) => {
 		a = a.split('_')[0];
 		b = b.split('_')[0];
 		return (a < b) ? -1 : (a > b) ? 1 : 0;
@@ -62,19 +49,19 @@ const getClasses = (options) => {
 	});
 
 
-	return entries;
+	return classes;
 }
 
 
 /* Преобразовать массив классов в объект с вложенностью соответствующей БЭМ иерархии */
-const toJSON = (entries, options) => {
+const toJSON = (classes, options) => {
 	let bemjson = {};
 	let blockname = '';
 	let omit = new RegExp(`^(${options.omit.replace(/\s*/g, '').replace(/,/g, '|')}).*?`);
 	let use = new RegExp(`^(${options.use.replace(/\s*/g, '').replace(/,/g, '|')}).*?`);
 
 	// наполняю bemjson
-	entries.classes.forEach((item) => {
+	classes.forEach((item) => {
 		// если имя класса есть в списке исключений - пропускаю
 		if(!item.match(use) || item.match(omit)) return;
 
@@ -85,7 +72,7 @@ const toJSON = (entries, options) => {
 		}
 
 		// если есть блок-js - создать js файл с именем блока
-		if ((entries.attrs.indexOf(blockname) > -1) || (item.indexOf(blockname + '-js') > -1)) {
+		if (item.indexOf(blockname + '-js') > -1) {
 			bemjson[blockname]['js'] = true;
 		}
 
